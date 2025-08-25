@@ -37,14 +37,14 @@ public abstract class MobEffectInstanceMixin implements IMobEffectInstance {
 
     @Inject(method = "load", at = @At("RETURN"))
     private static void loadExtra(CompoundTag nbt, CallbackInfoReturnable<MobEffectInstance> cir) {
-        if (nbt.contains("confluence:is_enabled")) {
-            IMobEffectInstance.of(cir.getReturnValue()).switchable_effect_icon$setEnabled(nbt.getBoolean("confluence:is_enabled"));
+        if (nbt.contains("switchable_effect_icon:is_enabled")) {
+            IMobEffectInstance.of(cir.getReturnValue()).switchable_effect_icon$setEnabled(nbt.getBoolean("switchable_effect_icon:is_enabled"));
         }
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;shouldApplyEffectTickThisTick(II)Z"))
     private boolean skip(boolean original) {
-        if (!switchable_effect_icon$enabled) {
+        if (!switchable_effect_icon$isEnabled()) {
             return false;
         }
         return original;

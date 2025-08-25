@@ -14,24 +14,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = ClientboundUpdateMobEffectPacket.class, priority = 1145)
 public abstract class ClientboundUpdateMobEffectPacketMixin implements IClientboundUpdateMobEffectPacket {
     @Unique
-    private boolean confluence$enabled = true;
+    private boolean switchable_effect_icon$enabled = true;
 
     public boolean switchable_effect_icon$isEnabled() {
-        return confluence$enabled;
+        return switchable_effect_icon$enabled;
     }
 
     @Inject(method = "<init>(ILnet/minecraft/world/effect/MobEffectInstance;Z)V", at = @At("TAIL"))
     private void init(int entityId, MobEffectInstance effect, boolean blend, CallbackInfo ci) {
-        this.confluence$enabled = IMobEffectInstance.of(effect).switchable_effect_icon$isEnabled();
+        this.switchable_effect_icon$enabled = IMobEffectInstance.of(effect).switchable_effect_icon$isEnabled();
     }
 
     @Inject(method = "<init>(Lnet/minecraft/network/RegistryFriendlyByteBuf;)V", at = @At("TAIL"))
     private void init(RegistryFriendlyByteBuf buffer, CallbackInfo ci) {
-        this.confluence$enabled = buffer.readBoolean();
+        this.switchable_effect_icon$enabled = buffer.readBoolean();
     }
 
     @Inject(method = "write", at = @At("TAIL"))
     private void encode(RegistryFriendlyByteBuf buffer, CallbackInfo ci) {
-        buffer.writeBoolean(confluence$enabled);
+        buffer.writeBoolean(switchable_effect_icon$enabled);
     }
 }
