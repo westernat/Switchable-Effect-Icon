@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.mesdag.switchable_effect_icon.IAbstractContainerScreen;
 import org.mesdag.switchable_effect_icon.IMobEffectInstance;
@@ -25,9 +24,8 @@ public abstract class EffectRenderingInventoryScreenMixin implements IAbstractCo
     private boolean confluence$mouseClicked = false;
 
     @Override
-    public TriState switchable_effect_icon$onMouseClicked(double mouseX, double mouseY, int button) {
+    public void switchable_effect_icon$onMouseClicked() {
         this.confluence$mouseClicked = true;
-        return TriState.DEFAULT;
     }
 
     @Inject(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V", shift = At.Shift.AFTER))
@@ -35,8 +33,9 @@ public abstract class EffectRenderingInventoryScreenMixin implements IAbstractCo
         if (confluence$mouseClicked && IMobEffectInstance.isSwitchableEffect(instance)) {
             this.confluence$mouseClicked = false;
             IMobEffectInstance i = IMobEffectInstance.of(instance);
-            i.switchable_effect_icon$setEnabled(!i.switchable_effect_icon$isEnabled());
-            PacketDistributor.sendToServer(new SwitchEffectEnabledPackedC2S(instance.getEffect(), i.switchable_effect_icon$isEnabled()));
+            boolean switched = !i.switchable_effect_icon$isEnabled();
+            i.switchable_effect_icon$setEnabled(switched);
+            PacketDistributor.sendToServer(new SwitchEffectEnabledPackedC2S(instance.getEffect(), switched));
         }
     }
 
