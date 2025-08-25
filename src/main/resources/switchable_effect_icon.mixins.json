@@ -1,0 +1,23 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "org.mesdag.switchable_effect_icon.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [
+        "ClientboundUpdateMobEffectPacketMixin",
+        "LivingEntityMixin",
+        "MobEffectInstanceMixin"
+    ],
+    "client": [
+        "AbstractContainerScreenMixin",
+        "ClientPacketListenerMixin",
+        "EffectRenderingInventoryScreenMixin",
+        "GuiMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "requireAnnotations": true
+    }
+}
